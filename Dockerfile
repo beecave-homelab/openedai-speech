@@ -31,5 +31,7 @@ ENV PRELOAD_MODEL=${PRELOAD_MODEL}
 ENV TTS_HOME=voices
 ENV HF_HOME=voices
 ENV COQUI_TOS_AGREED=1
+# See for more info on what overrides to use to fit your AMD GPU https://github.com/ollama/ollama/blob/main/docs/gpu.md#overrides
+ENV HSA_OVERRIDE_GFX_VERSION=10.3.0 
 
 CMD bash startup.sh
