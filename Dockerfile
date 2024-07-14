@@ -35,6 +35,7 @@ ENV COQUI_TOS_AGREED=1
 ENV HSA_OVERRIDE_GFX_VERSION=10.3.0 
 
 # Change a line in voice.py file from Piper to allow it to use the AMD GPU
+COPY ./build-scripts/00-change-piper-voice-file.sh /app/build-scripts/00-change-piper-voice-file.sh
 RUN /app/build-scripts/00-change-piper-voice-file.sh
 
 CMD bash startup.sh
