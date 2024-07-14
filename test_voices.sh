@@ -1,6 +1,16 @@
 #!/bin/bash
 
-URL=${1:-http://localhost:8000/v1/audio/speech}
+# Default URL
+URL="http://192.168.2.108:8000/v1/audio/speech"
+
+# Parse arguments
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -u|--url) URL="http://$2/v1/audio/speech"; shift ;;
+        *) echo "Unknown parameter passed: $1"; exit 1 ;;
+    esac
+    shift
+done
 
 curl -s $URL -H "Content-Type: application/json" -d "{
     \"model\": \"tts-1\",
@@ -9,32 +19,32 @@ curl -s $URL -H "Content-Type: application/json" -d "{
     \"speed\": 1.0
   }" | mpv --really-quiet -
 
-for voice in alloy echo fable onyx nova shimmer ; do
+for voice in alloy echo fable onyx nova shimmer; do
 
-echo $voice
+    echo $voice
 
-curl -s $URL -H "Content-Type: application/json" -d "{
-    \"model\": \"tts-1\",
-    \"input\": \"original\",
-    \"voice\": \"echo\",
-    \"speed\": 1.0
-  }" | mpv --really-quiet -
+    curl -s $URL -H "Content-Type: application/json" -d "{
+        \"model\": \"tts-1\",
+        \"input\": \"original\",
+        \"voice\": \"echo\",
+        \"speed\": 1.0
+      }" | mpv --really-quiet -
 
-curl -s https://cdn.openai.com/API/docs/audio/$voice.wav | mpv --really-quiet -
+    curl -s https://cdn.openai.com/API/docs/audio/$voice.wav | mpv --really-quiet -
 
-curl -s $URL -H "Content-Type: application/json" -d "{
-    \"model\": \"tts-1\",
-    \"input\": \"The quick brown fox jumped over the lazy dog. This voice is called $voice, how do you like this voice?\",
-    \"voice\": \"$voice\",
-    \"speed\": 1.0
-  }" | mpv --really-quiet -
+    curl -s $URL -H "Content-Type: application/json" -d "{
+        \"model\": \"tts-1\",
+        \"input\": \"The quick brown fox jumped over the lazy dog. This voice is called $voice, how do you like this voice?\",
+        \"voice\": \"$voice\",
+        \"speed\": 1.0
+      }" | mpv --really-quiet -
 
-curl -s $URL -H "Content-Type: application/json" -d "{
-    \"model\": \"tts-1-hd\",
-    \"input\": \"The quick brown fox jumped over the lazy dog. This HD voice is called $voice, how do you like this voice?\",
-    \"voice\": \"$voice\",
-    \"speed\": 1.0
-  }" | mpv --really-quiet -
+    curl -s $URL -H "Content-Type: application/json" -d "{
+        \"model\": \"tts-1-hd\",
+        \"input\": \"The quick brown fox jumped over the lazy dog. This HD voice is called $voice, how do you like this voice?\",
+        \"voice\": \"$voice\",
+        \"speed\": 1.0
+      }" | mpv --really-quiet -
 
 done
 

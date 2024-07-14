@@ -38,7 +38,7 @@ ENV HSA_OVERRIDE_GFX_VERSION=10.3.0
 
 # Change a line in voice.py file from Piper to allow it to use the AMD GPU
 ENV PYTHON_VERSION=3.10
-COPY ./build-scripts/00-change-piper-voice-file.sh /app/build-scripts/00-change-piper-voice-file.sh
+COPY ./build-scripts/* /app/build-scripts/
 RUN chown -R 1000:1000 /app/build-scripts/00-change-piper-voice-file.sh
 RUN chmod +x /app/build-scripts/00-change-piper-voice-file.sh
 RUN /app/build-scripts/00-change-piper-voice-file.sh ${PYTHON_VERSION}
