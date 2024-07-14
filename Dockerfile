@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.10-slim
 
 RUN --mount=type=cache,target=/root/.cache/pip pip install -U pip
 
