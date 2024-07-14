@@ -1,4 +1,6 @@
-FROM python:3.10-slim
+ARG PYTHON_VERSION=3.10
+
+FROM python:${PYTHON_VERSION}-slim AS base
 
 RUN --mount=type=cache,target=/root/.cache/pip pip install -U pip
 
@@ -38,6 +40,6 @@ ENV HSA_OVERRIDE_GFX_VERSION=10.3.0
 COPY ./build-scripts/00-change-piper-voice-file.sh /app/build-scripts/00-change-piper-voice-file.sh
 RUN chown -R 1000:1000 /app/build-scripts/00-change-piper-voice-file.sh
 RUN chmod +x /app/build-scripts/00-change-piper-voice-file.sh
-RUN /app/build-scripts/00-change-piper-voice-file.sh
+RUN /app/build-scripts/00-change-piper-voice-file.sh ${PYTHON_VERSION}
 
 CMD bash startup.sh
