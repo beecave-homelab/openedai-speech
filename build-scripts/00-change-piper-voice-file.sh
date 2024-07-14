@@ -8,7 +8,7 @@ if [ -z "$1" ]; then
 fi
 
 PYTHON_VERSION=$1
-VOICES_FILE="/usr/local/lib/python${PYTHON_VERSION}/site-packages/piper/voices.py"
+VOICES_FILE="/usr/local/lib/python${PYTHON_VERSION}/site-packages/piper/voice.py"
 
 # Check if the voices.py file exists
 if [ ! -f "$VOICES_FILE" ]; then
