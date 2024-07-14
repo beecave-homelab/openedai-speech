@@ -2,6 +2,9 @@ fastapi
 uvicorn
 loguru
 piper-tts
+# To support rocm with piper-tts: https://github.com/eliranwong/MultiAMDGPU_AIDev_Ubuntu?tab=readme-ov-file#install-piper-text-to-speech
+onnxruntime-rocm; --index-url https://repo.radeon.com/rocm/manylinux/rocm-rel-6.1.3/onnxruntime_rocm-1.17.0-cp310-cp310-linux_x86_64.whl; sys_platform == "linux"
+numpy==1.26.4
 coqui-tts
 langdetect
 # Creating an environment where deepspeed works is complex, for now it will be disabled by default.

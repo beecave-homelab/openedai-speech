@@ -34,4 +34,7 @@ ENV COQUI_TOS_AGREED=1
 # See for more info on what overrides to use to fit your AMD GPU https://github.com/ollama/ollama/blob/main/docs/gpu.md#overrides
 ENV HSA_OVERRIDE_GFX_VERSION=10.3.0 
 
+# Change a line in voice.py file from Piper to allow it to use the AMD GPU
+RUN /app/build-scripts/00-change-piper-voice-file.sh
+
 CMD bash startup.sh
