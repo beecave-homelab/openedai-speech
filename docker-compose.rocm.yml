@@ -4,7 +4,7 @@ services:
       dockerfile: Dockerfile
       args:
         - USE_ROCM=1
-    image: ghcr.io/matatonic/openedai-speech-rocm
+    # image: ghcr.io/matatonic/openedai-speech-rocm
     env_file: speech.env
     ports:
       - "8000:8000"
