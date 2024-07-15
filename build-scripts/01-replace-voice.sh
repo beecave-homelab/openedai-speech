@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #==============================================================================
-# SCRIPT: 01-replace_voice.sh
-# AUTHOR: elvee
-# DATE: 15-07-2024
+# SCRIPT: replace_voice.sh
+# AUTHOR: Your Name
+# DATE: YYYY-MM-DD
 # REV: 1.0
 # PLATFORM: Unix/Linux
 # PURPOSE: Replace original voice.py with modified version and set permissions
@@ -65,11 +65,12 @@ replace_voice_file() {
 # MAIN SCRIPT
 #--------------------------------------
 
-# Check if no arguments were passed
-if [ "$#" -eq 0 ]; then
-    display_help
-    exit 1
-fi
+# Default action
+default_action() {
+    log_message "Starting replacement of voice.py."
+    replace_voice_file
+    log_message "Completed replacement of voice.py."
+}
 
 # Parse command-line arguments
 while [[ "$#" -gt 0 ]]; do
@@ -96,13 +97,14 @@ while [[ "$#" -gt 0 ]]; do
     shift
 done
 
-# Log the start of the replacement process
-log_message "Starting replacement of voice.py."
-
-# Replace the original voice.py with the modified version
-replace_voice_file
-
-# Log the end of the replacement process
-log_message "Completed replacement of voice.py."
+# If no arguments are provided, run the default action
+if [ "$#" -eq 0 ]; then
+    default_action
+else
+    # If arguments are provided, continue with the script (arguments were already parsed)
+    log_message "Starting replacement of voice.py."
+    replace_voice_file
+    log_message "Completed replacement of voice.py."
+fi
 
 exit 0
