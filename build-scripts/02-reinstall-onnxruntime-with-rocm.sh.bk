@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Uninstall the existing onnxruntime package
+pip uninstall onnxruntime
+
+# Function to install a Python package if not already installed
+install_if_not_present() {
+    package=$1
+    version=$2
+    if ! pip show "$package" | grep -q "Version: $version"; then
+        pip install "$package==$version"
+    else
+        echo "$package $version is already installed."
+    fi
+}
+# Uninstall the existing onnxruntime package if it exists
+pip show onnxruntime && pip uninstall -y onnxruntime
+# Install onnxruntime with ROCm support from the specified URL
+# This is necessary to support ROCm with piper-tts
+# For more details, refer to the installation guide: 
+# https://github.com/eliranwong/MultiAMDGPU_AIDev_Ubuntu?tab=readme-ov-file#install-piper-text-to-speech
+pip install https://repo.radeon.com/rocm/manylinux/rocm-rel-6.1.3/onnxruntime_rocm-1.17.0-cp310-cp310-linux_x86_64.whl
+onnxruntime_url="https://repo.radeon.com/rocm/manylinux/rocm-rel-6.1.3/onnxruntime_rocm-1.17.0-cp310-cp310-linux_x86_64.whl"
+pip install "$onnxruntime_url"
+
+# Install a specific version of numpy
+pip install numpy==1.26.4
+
+# Install a specific version of protobuf
+pip install protobuf==4.25.3
+# Install specific versions of numpy and protobuf if not already installed
+install_if_not_present numpy 1.26.4
+install_if_not_present protobuf 4.25.3

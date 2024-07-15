@@ -1,12 +1,12 @@
 #!/bin/bash
 
 #==============================================================================
-# SCRIPT: 01-replace_voice.sh
+# SCRIPT: 02-reinstall-onnxruntime-with-rocm.sh
 # AUTHOR: elvee
-# DATE: 15-07-2024
+# DATE: 15-06-2024
 # REV: 1.0
 # PLATFORM: Unix/Linux
-# PURPOSE: Replace original voice.py with modified version and set permissions
+# PURPOSE: Install specific Python packages with error handling and logging
 #==============================================================================
 
 #--------------------------------------
@@ -15,8 +15,11 @@
 SCRIPT_NAME=$(basename "$0")
 VERSION="1.0"
 LOGFILE="/var/log/${SCRIPT_NAME}.log"
-MODIFIED_VOICE_FILE="/app/build-scripts/modified-voice.py"
-ORIGINAL_VOICE_FILE="/usr/local/lib/python3.10/site-packages/piper/voice.py"
+ONNXRUNTIME_URL="https://repo.radeon.com/rocm/manylinux/rocm-rel-6.1.3/onnxruntime_rocm-1.17.0-cp310-cp310-linux_x86_64.whl"
+PYTHON_PACKAGES=(
+    "numpy:1.26.4"
+    "protobuf:4.25.3"
+)
 
 #--------------------------------------
 # FUNCTIONS
@@ -48,17 +51,28 @@ error_exit() {
     exit 1
 }
 
-# Function: replace_voice_file
-# Replaces the original voice.py with the modified version and sets permissions
-replace_voice_file() {
-    if [ ! -f "$MODIFIED_VOICE_FILE" ]; then
-        error_exit "Modified voice.py file not found at $MODIFIED_VOICE_FILE"
+# Function: install_if_not_present
+# Install a Python package if not already installed
+install_if_not_present() {
+    local PACKAGE=$1
+    local VERSION=$2
+    if ! pip show "$PACKAGE" | grep -q "Version: $VERSION"; then
+        pip install "$PACKAGE==$VERSION" || error_exit "Failed to install $PACKAGE==$VERSION"
+        log_message "$PACKAGE $VERSION installed successfully."
+    else
+        log_message "$PACKAGE $VERSION is already installed."
     fi
+}
 
-    cp "$MODIFIED_VOICE_FILE" "$ORIGINAL_VOICE_FILE" || error_exit "Failed to copy $MODIFIED_VOICE_FILE to $ORIGINAL_VOICE_FILE"
-    chmod 644 "$ORIGINAL_VOICE_FILE" || error_exit "Failed to set permissions on $ORIGINAL_VOICE_FILE"
-    log_message "Replaced voice.py with the modified version."
-    echo "Replaced voice.py with the modified version."
+# Function: install_onnxruntime
+# Uninstall existing onnxruntime package if it exists and install the specified version
+install_onnxruntime() {
+    if pip show onnxruntime > /dev/null; then
+        pip uninstall -y onnxruntime || error_exit "Failed to uninstall existing onnxruntime"
+        log_message "Uninstalled existing onnxruntime package."
+    fi
+    pip install "$ONNXRUNTIME_URL" || error_exit "Failed to install onnxruntime from $ONNXRUNTIME_URL"
+    log_message "onnxruntime installed successfully from $ONNXRUNTIME_URL."
 }
 
 #--------------------------------------
@@ -96,13 +110,19 @@ while [[ "$#" -gt 0 ]]; do
     shift
 done
 
-# Log the start of the replacement process
-log_message "Starting replacement of voice.py."
+# Log the start of processing
+log_message "Starting package installation process."
 
-# Replace the original voice.py with the modified version
-replace_voice_file
+# Install onnxruntime
+install_onnxruntime
 
-# Log the end of the replacement process
-log_message "Completed replacement of voice.py."
+# Install specific versions of Python packages
+for package in "${PYTHON_PACKAGES[@]}"; do
+    IFS=":" read -r name version <<< "$package"
+    install_if_not_present "$name" "$version"
+done
+
+# Log the end of processing
+log_message "Completed package installation process."
 
 exit 0

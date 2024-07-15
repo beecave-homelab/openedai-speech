@@ -7,7 +7,7 @@ curl -s $URL -H "Content-Type: application/json" -d "{
     \"input\": \"I'm going to play you the original voice, followed by the piper voice and finally the X T T S version 2 voice\",
     \"voice\": \"echo\",
     \"speed\": 1.0
-  }" | vlc --intf dummy --quiet -
+  }" | vlc --intf dummy --quiet --play-and-exit -
 
 for voice in alloy echo fable onyx nova shimmer ; do
 
@@ -18,23 +18,23 @@ curl -s $URL -H "Content-Type: application/json" -d "{
     \"input\": \"original\",
     \"voice\": \"echo\",
     \"speed\": 1.0
-  }" | vlc --intf dummy --quiet -
+  }" | vlc --intf dummy --quiet --play-and-exit -
 
-curl -s https://cdn.openai.com/API/docs/audio/$voice.wav | vlc --intf dummy --quiet -
+curl -s https://cdn.openai.com/API/docs/audio/$voice.wav | vlc --intf dummy --quiet --play-and-exit -
 
 curl -s $URL -H "Content-Type: application/json" -d "{
     \"model\": \"tts-1\",
     \"input\": \"The quick brown fox jumped over the lazy dog. This voice is called $voice, how do you like this voice?\",
     \"voice\": \"$voice\",
     \"speed\": 1.0
-  }" | vlc --intf dummy --quiet -
+  }" | vlc --intf dummy --quiet --play-and-exit -
 
 curl -s $URL -H "Content-Type: application/json" -d "{
     \"model\": \"tts-1-hd\",
     \"input\": \"The quick brown fox jumped over the lazy dog. This HD voice is called $voice, how do you like this voice?\",
     \"voice\": \"$voice\",
     \"speed\": 1.0
-  }" | vlc --intf dummy --quiet -
+  }" | vlc --intf dummy --quiet --play-and-exit -
 
 done
 
@@ -43,25 +43,25 @@ curl -s $URL -H "Content-Type: application/json" -d "{
     \"input\": \"the slowest voice\",
     \"voice\": \"onyx\",
     \"speed\": 0.25
-  }" | vlc --intf dummy --quiet -
+  }" | vlc --intf dummy --quiet --play-and-exit -
 
 curl -s $URL -H "Content-Type: application/json" -d "{
     \"model\": \"tts-1-hd\",
     \"input\": \"the slowest HD voice\",
     \"voice\": \"onyx\",
     \"speed\": 0.25
-  }" | vlc --intf dummy --quiet -
+  }" | vlc --intf dummy --quiet --play-and-exit -
 
 curl -s $URL -H "Content-Type: application/json" -d "{
     \"model\": \"tts-1\",
     \"input\": \"And this is how fast it can go, the fastest voice\",
     \"voice\": \"nova\",
     \"speed\": 4.0
-  }" | vlc --intf dummy --quiet -
+  }" | vlc --intf dummy --quiet --play-and-exit -
 
 curl -s $URL -H "Content-Type: application/json" -d "{
     \"model\": \"tts-1-hd\",
     \"input\": \"And this is how fast it can go, the fastest HD voice\",
     \"voice\": \"nova\",
     \"speed\": 4.0
-  }" | vlc --intf dummy --quiet -
+  }" | vlc --intf dummy --quiet --play-and-exit -
