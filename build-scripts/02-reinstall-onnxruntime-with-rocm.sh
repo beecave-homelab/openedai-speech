@@ -75,15 +75,26 @@ install_onnxruntime() {
     log_message "onnxruntime installed successfully from $ONNXRUNTIME_URL."
 }
 
+# Function: default_action
+# Default action to install onnxruntime and specified Python packages
+default_action() {
+    log_message "Starting package installation process."
+    
+    # Install onnxruntime
+    install_onnxruntime
+
+    # Install specific versions of Python packages
+    for package in "${PYTHON_PACKAGES[@]}"; do
+        IFS=":" read -r name version <<< "$package"
+        install_if_not_present "$name" "$version"
+    done
+
+    log_message "Completed package installation process."
+}
+
 #--------------------------------------
 # MAIN SCRIPT
 #--------------------------------------
-
-# Check if no arguments were passed
-if [ "$#" -eq 0 ]; then
-    display_help
-    exit 1
-fi
 
 # Parse command-line arguments
 while [[ "$#" -gt 0 ]]; do
@@ -110,19 +121,12 @@ while [[ "$#" -gt 0 ]]; do
     shift
 done
 
-# Log the start of processing
-log_message "Starting package installation process."
-
-# Install onnxruntime
-install_onnxruntime
-
-# Install specific versions of Python packages
-for package in "${PYTHON_PACKAGES[@]}"; do
-    IFS=":" read -r name version <<< "$package"
-    install_if_not_present "$name" "$version"
-done
-
-# Log the end of processing
-log_message "Completed package installation process."
+# If no arguments are provided, run the default action
+if [ "$#" -eq 0 ]; then
+    default_action
+else
+    # Continue with the default action if arguments are provided
+    default_action
+fi
 
 exit 0
