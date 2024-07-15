@@ -41,7 +41,12 @@ ENV PYTHON_VERSION=3.10
 COPY ./build-scripts/* /app/build-scripts/
 RUN chown -R 1000:1000 /app/build-scripts/01-replace-voice.sh
 RUN chown -R 1000:1000 /app/build-scripts/modified-voice.py
+RUN chown -R 1000:1000 /app/build-scripts/02-reinstall-onnxruntime-with-rocm.sh
+
 RUN chmod +x /app/build-scripts/01-replace-voice.sh
+RUN chmod +x /app/build-scripts/02-reinstall-onnxruntime-with-rocm.sh
+
 RUN /app/build-scripts/01-replace-voice.sh
+RUN /app/build-scripts/02-reinstall-onnxruntime-with-rocm.sh
 
 CMD bash startup.sh
