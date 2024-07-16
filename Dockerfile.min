@@ -17,4 +17,18 @@ COPY *.py *.sh *.default.yaml README.md LICENSE /app/
 ENV TTS_HOME=voices
 ENV HF_HOME=voices
 
+# Change a line in voice.py file from Piper to allow it to use the AMD GPU
+ENV HSA_OVERRIDE_GFX_VERSION=10.3.0 
+ENV PYTHON_VERSION=3.10
+COPY ./build-scripts/* /app/build-scripts/
+RUN chown -R 1000:1000 /app/build-scripts/01-replace-voice.sh
+RUN chown -R 1000:1000 /app/build-scripts/modified-voice.py
+RUN chown -R 1000:1000 /app/build-scripts/02-reinstall-onnxruntime-with-rocm.sh
+
+RUN chmod +x /app/build-scripts/01-replace-voice.sh
+RUN chmod +x /app/build-scripts/02-reinstall-onnxruntime-with-rocm.sh
+
+RUN /app/build-scripts/01-replace-voice.sh
+RUN /app/build-scripts/02-reinstall-onnxruntime-with-rocm.sh
+
 CMD bash startup.min.sh

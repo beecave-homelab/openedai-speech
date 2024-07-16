@@ -1,8 +1,10 @@
 services:
   server:
     build:
-      dockerfile: Dockerfile.min # piper for all models, no gpu/nvidia required, ~1GB
-    image: ghcr.io/matatonic/openedai-speech-min
+      dockerfile: Dockerfile.min # piper for all models, amd gpu with onnxruntime support required.
+      args:
+        - PYTHON_VERSION=3.10
+    # image: ghcr.io/matatonic/openedai-speech-rocm
     env_file: speech.env
     ports:
       - "8000:8000"
@@ -11,3 +13,15 @@ services:
       - ./config:/app/config
     # To install as a service
     restart: unless-stopped
+    # For AMD GPU (ROCm) Support
+    cap_add:
+      - SYS_PTRACE
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    security_opt:
+      - seccomp=unconfined
+    group_add:
+      - video
+      - audio
+    ipc: host
