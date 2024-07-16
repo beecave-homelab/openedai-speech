@@ -1,4 +1,6 @@
-FROM python:3.11-slim
+ARG PYTHON_VERSION=3.10
+
+FROM python:${PYTHON_VERSION}-slim AS base
 
 ARG TARGETPLATFORM
 RUN apt-get update && apt-get install --no-install-recommends -y curl ffmpeg
